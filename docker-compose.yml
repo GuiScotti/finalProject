@@ -1,0 +1,148 @@
+version: '3.8'
+
+networks:
+  laravel-vue:
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+
+services:
+  app:
+    build:
+      context: ./dockerfiles
+      dockerfile: nginx.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www/html:delegated
+    depends_on:
+      - php
+      - redis
+      - pgadmin
+      - mailhog
+      - npm
+    networks:
+      - laravel-vue
+
+  postgres:
+    image: postgres
+    tty: true
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "root"
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+    networks:
+      - laravel-vue
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "codeacademy@3cplus.com"
+      PGADMIN_DEFAULT_PASSWORD: "codeacademy"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
+    networks:
+      - laravel-vue
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  php:
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./backend:/var/www/html:delegated
+    networks:
+      - laravel-vue
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - laravel-vue
+
+  composer:
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      - php
+    entrypoint: [ 'composer', '--ignore-platform-reqs' ]
+    networks:
+      - laravel-vue
+
+  npm-laravel:
+    image: node:current-alpine
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "5173:5173"
+    working_dir: /var/www/html
+    entrypoint: [ 'npm' ]
+    networks:
+      - laravel-vue
+
+  artisan:
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./backend:/var/www/html:delegated
+    depends_on:
+      - postgres
+    entrypoint: [ 'php', '/var/www/html/artisan' ]
+    networks:
+      - laravel-vue
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - laravel-vue
+
+  vue-ui:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:8080"
+    stdin_open: true
+    volumes:
+      - './frontend:/app'
+    networks:
+      - laravel-vue
+
+  npm:
+    image: node:current-alpine 
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    entrypoint: [ 'npm' ]
+    command: [ 'install' ]
+    depends_on:
+      - vue-ui
