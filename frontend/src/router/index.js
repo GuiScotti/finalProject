@@ -1,21 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
-    path: '/',
-    name: 'Home', //Nome da aba
-    component: () => import('@/views/HomeView.vue')
+    path: "/",
+    name: "Home", //Nome da aba
+    component: () => import("@/views/HomeView.vue"),
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import('@/views/AboutView.vue')
-  }
-]
+    path: "/about",
+    name: "About",
+    component: () => import("@/views/AboutView.vue"),
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -23,4 +23,4 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-export default router
+export default router;
