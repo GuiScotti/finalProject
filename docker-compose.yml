@@ -48,7 +48,7 @@ services:
     depends_on:
       - mysql
     ports:
-      - "8087:80"
+      - "8086:80"
     networks:
       - laravel-vue
 
@@ -128,19 +128,21 @@ services:
     build:
       context: ./frontend
     ports:
-      - "8085:8080"
+      - "8085:5173"
     stdin_open: true
     volumes:
       - './frontend:/app'
     networks:
       - laravel-vue
+    depends_on:
+      - npm
     entrypoint: [ "sh", "-c" ]
-    command: [ "npm install && npm run serve" ]
+    command: [ "npm install && npm run dev" ]
   
   npm:
     image: node:current-alpine 
     volumes:
-      - ./vue-app:/app
+      - ./frontend:/app
     working_dir: /app
     entrypoint: [ 'npm' ]
     
