@@ -35,12 +35,18 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'User',
     ],
+
+    'api' => [
+        'driver' => 'sanctum',
+        'provider' => 'User',
+        'hash' => false,
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -60,10 +66,10 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
+        'User' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -91,8 +97,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'User' => [
+            'provider' => 'User',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
