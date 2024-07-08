@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('funnel', function (Blueprint $table){
+        Schema::create('funnel', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('name');
+            $table->timestamps();
+        
+            $table->foreign('user_id')->references('id')->on('User')->onDelete('cascade');
         });
     }
 

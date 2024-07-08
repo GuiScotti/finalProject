@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class funnel extends Model
+class Funnel extends Model
 {
     use HasFactory;
 
     protected $table = 'funnel';
-    protected $fillable = [
-        'name',
-    ];
+    protected $fillable = ['user_id', 'name'];
 
-    public $timestamps = false;
-
-    public function contacts()
+    // Relacionamento com o usuário
+    public function user()
     {
-        return $this->hasMany(contact::class, 'funnel_id');
+        return $this->belongsTo(User::class);
     }
 }
