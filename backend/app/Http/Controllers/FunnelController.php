@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Funnel;
 use Illuminate\Support\Facades\Auth;
+use Psy\CodeCleaner\ImplicitReturnPass;
 
 
 class FunnelController extends Controller
@@ -47,4 +48,32 @@ class FunnelController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function contactsValueReport()
+    {
+        $contactsValue = Funnel::with('contacts')
+            ->get()
+            ->map(function ($funnel) {
+                return [
+                    'funnel' => $funnel->name,
+                    'total_value' => $funnel->contacts->sum('value')
+                ];
+            });
+    
+        return response()->json($contactsValue);
+    }
+
+    public function createdContactsReport()
+{
+    $createdContacts = Funnel::with('contacts')
+        ->get()
+        ->map(function ($funnel) {
+            return [
+                'funnel' => $funnel->name,
+                'created_contacts' => $funnel->contacts->count()
+            ];
+        });
+
+    return response()->json($createdContacts);
+}
 }
