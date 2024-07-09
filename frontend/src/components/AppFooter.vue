@@ -42,7 +42,6 @@ export default {
   padding: 7px;
   background-color: #fff;
   border-top: 1px solid #eaeaea;
-  z-index: 1050 !important;
   width: 100%;
   position: fixed;
   bottom: 0;
@@ -78,10 +77,11 @@ export default {
   display: flex;
   align-items: center;
   color: #677c92;
+  margin: 5px;
 }
 
 #ip-info span {
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   text-decoration: none !important;

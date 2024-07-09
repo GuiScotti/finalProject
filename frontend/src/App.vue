@@ -15,7 +15,7 @@
 
 @font-face {
   font-family: 'grotesque';
-  src: url('@/assets/fonts/grotesque/grotesque (1).ttf') format('truetype');
+  src: url('@/assets/fonts/grotesque/grotesque (30).ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

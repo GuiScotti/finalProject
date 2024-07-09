@@ -1,69 +1,102 @@
 <template>
   <div id="main">
     <backEffect />
-    <div id="formArea">
-      <div id="logoArea">
-        <div id="logo3c">
-          <img id="three" src="../assets/vencedor/3da3c.png" alt="three" />
-          <img id="LetterC" src="../assets/vencedor/cDa3c.png" alt="c" />
-          <img id="plus" src="../assets/vencedor/PlusDa3c.png" alt="plus" />
-        </div>
-        <div id="pics3c">
-          <img id="plusIcon" src="../assets/vencedor/plus3c.png" alt="plus" />
-          <img
-            id="messageIcon"
-            src="../assets/vencedor/message3c.png"
-            alt="message"
-          />
-          <img
-            id="asterisc"
-            src="../assets/vencedor/asterisc3c.png"
-            alt="asterisc"
-          />
-        </div>
-      </div>
-      <div id="titleArea">
-        <img src="../assets/vencedor/Title3c.PNG" alt="title" />
-        <p>Um único login para todos os produtos da 3c plus</p>
-      </div>
-      <div id="form">
-          <div class="form-floating mb-3">
-            <input
-              type="email"
-              class="form-control"
-              placeholder="name@example.com"
-            />
-            <label for="floatingInput">Email ou Ramal</label>
+    <div id="main-container">
+      <div id="formArea">
+        <div id="logoArea">
+          <div id="logo3c">
+            <img id="three" src="../assets/vencedor/3da3c.png" alt="three" />
+            <img id="LetterC" src="../assets/vencedor/cDa3c.png" alt="c" />
+            <img id="plus" src="../assets/vencedor/PlusDa3c.png" alt="plus" />
           </div>
-          <div class="form-floating">
-            <input
-              type="password"
-              class="form-control"
-              id="floatingPassword"
-              placeholder="Password"
+          <div id="pics3c">
+            <img id="plusIcon" src="../assets/vencedor/plus3c.png" alt="plus" />
+            <img
+              id="messageIcon"
+              src="../assets/vencedor/message3c.png"
+              alt="message"
             />
-            <label for="floatingPassword">Senha</label>
+            <img
+              id="asterisc"
+              src="../assets/vencedor/asterisc3c.png"
+              alt="asterisc"
+            />
           </div>
+        </div>
+        <div id="titleArea">
+          <img src="../assets/vencedor/Title3c.PNG" alt="title" />
+          <p>Um único login para todos os produtos da 3c plus</p>
+        </div>
+        <div id="form">
+          <InputForm
+            type="text"
+            v-model="email"
+            placeholder="Email ou Ramal"
+            id="email"
+            label="Email ou Ramal"
+          />
+          <InputForm
+            type="password"
+            v-model="password"
+            placeholder="Senha"
+            id="password"
+            label="Senha"
+          />
           <div id="linkForm">
-            <router-link class="link">Esqueceu sua senha?</router-link>
-            <router-link class="link">Crie sua conta</router-link>
+            <router-link class="link" to="/remember"
+              >Esqueceu sua senha?</router-link
+            >
+            <router-link class="link" to="/register"
+              >Crie sua conta</router-link
+            >
           </div>
-          <button type="button" class="btn btn-primary">Entrar</button>
+          <button type="button" class="btn btn-primary" @click="handleLogin">
+            Entrar
+          </button>
+        </div>
       </div>
+      <AppFooter />
     </div>
-    <AppFooter />
   </div>
 </template>
 
 <script>
+import { login } from "../services/HttpService";
 import AppFooter from "../components/AppFooter.vue";
 import backEffect from "../components/backEffect.vue";
+import InputForm from "../components/InputForm.vue";
 
 export default {
   name: "Login",
   components: {
     AppFooter,
     backEffect,
+    InputForm,
+  },
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    async handleLogin() {
+      try {
+        const response = await login(this.email, this.password);
+        const token = response.data.token;
+        this.storeToken(token);
+        this.$router.push({ name: "Dashboard" });
+      } catch (error) {
+        console.error("Erro ao fazer login:", error);
+      }
+    },
+    getToken() {
+      const encryptedToken = localStorage.getItem("authToken");
+      if (encryptedToken) {
+        return decryptToken(encryptedToken);
+      }
+      return null;
+    },
   },
 };
 </script>
@@ -76,18 +109,17 @@ export default {
   align-items: center;
   flex-direction: column;
   height: 100vh;
-  background-color: #fefeff;
   overflow: hidden;
-  z-index: 100;
 }
 
 /* FORM STYLE */
-#formArea {
-  height: 100%;
-  width: 43%;
+#main-container {
+  width: 40%;
+  height: 85%;
+  position: absolute;
   background-color: #ffffff;
   border-radius: 10px;
-  padding: 56px;
+  padding: 30px 30px 80px 30px;
   z-index: 1050 !important;
   box-shadow: 0 4px 18px 0 rgba(34, 54, 77, 0.12);
   display: flex;
@@ -95,7 +127,61 @@ export default {
   justify-content: center;
   flex-direction: column;
   color: #677c92;
-  margin-bottom: 40px;
+}
+
+/* FORM STYLE */
+
+/* TITLE STYLE */
+
+#titleArea {
+  display: flex;
+  flex-direction: column;
+  justify-content: center !important;
+  align-items: center;
+}
+
+#titleArea img {
+  width: 308.81px;
+  height: 27.19px;
+  margin: 32px 0px 12px;
+}
+
+/* STYLE FROM THE FORM */
+
+#form {
+  width: 100%;
+  margin: 8px 0px 0px;
+}
+
+#linkForm {
+  display: flex;
+  justify-content: space-between;
+  margin-top: px;
+  width: 98%;
+  align-items: center;
+  margin-left: 5px;
+}
+
+#linkForm .link {
+  text-decoration: none !important;
+  font-size: 14px;
+  color: inherit;
+  margin-bottom: 10px;
+}
+
+#form button {
+  width: 100%;
+  height: 40px;
+  margin-bottom: -50px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#form button:hover {
+  background-color: #0056b3;
 }
 
 /* LOGO ANIMATION */
@@ -190,82 +276,5 @@ export default {
   width: 59.38px;
   height: 60.69px;
   margin: 0 10px;
-}
-
-/* FORM STYLE */
-
-/* TITLE STYLE */
-
-#titleArea {
-  display: flex;
-  flex-direction: column;
-  justify-content: center !important;
-  align-items: center;
-}
-
-#titleArea img {
-  width: 308.81px;
-  height: 27.19px;
-  margin: 32px 0px 12px;
-}
-
-/* STYLE FROM THE FORM */
-
-#form {
-  width: 100%;
-  margin: 32px 0px 0px;
-}
-
-#form .form-floating {
-  position: relative;
-}
-
-#form .form-control {
-  border-radius: 8px;
-  width: 100%;
-  padding-top: 12px; 
-  padding-bottom: 4px; 
-  font-size: 17px;
-}
-
-#form .form-control:focus {
-  border-color: #007bff;
-  box-shadow: none;
-}
-
-#form .form-control:focus + label,
-#form .form-control:not(:placeholder-shown) + label {
-  transform: translateY(-50%);
-  font-size: 17px; 
-  color: #495057;
-}
-
-#form label {
-  position: absolute;
-  transition: all 0.2s;
-  pointer-events: none;
-  font-size: 17px;
-}
-
-#form button {
-  width: 100%;
-  height: 50px;
-  margin-top: 40px;
-}
-
-#linkForm {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  width: 98%;
-  align-items: center;
-  margin-left: 5px;
-}
-
-#linkForm .link {
-  text-decoration: none !important;
-  font-size: 14px;
-  color: inherit;
-  margin-bottom: 10px;
 }
 </style>
