@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "sass": "^1.77.6",
+    "sass-loader": "^14.2.1"
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0"
+  }
+}
