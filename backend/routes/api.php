@@ -18,8 +18,13 @@ Route::post('/resetPassword/{token}', [ResetPasswordController::class, 'reset'])
 
 Route::middleware('auth:sanctum')->get('/funnels', [FunnelController::class, 'index']);
 Route::middleware('auth:sanctum')->get('/funnels/search', [FunnelController::class, 'search']);
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/funnel', [FunnelController::class, 'store']);
     Route::delete('/funnel/{id}', [FunnelController::class, 'destroy']);
 });
+
+// relatorios
+
+Route::get('/funnels/reports/completedCcontacts', [FunnelController::class, 'completedContactsReport']);
+Route::get('/funnels/reports/contactsValue', [FunnelController::class, 'contactsValueReport']);
+Route::get('/funnels/reports/createdContacts', [FunnelController::class, 'createdContactsReport']);
