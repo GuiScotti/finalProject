@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('funnel', function (Blueprint $table) {
+        schema::create('stages', function (Blueprint $table){
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->foreign('funnel_id')->constrained()->onDelete('cascade');
             $table->string('name');
+            $table->integer('order')->default(0);
             $table->timestamps();
-        
-            $table->foreign('user_id')->references('id')->on('User')->onDelete('cascade');
         });
-
     }
 
     /**
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('funnel');
+        Schema::dropIfExists('stages');
     }
 };
