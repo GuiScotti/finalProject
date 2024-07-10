@@ -237,7 +237,6 @@ export default {
 }
 
 #banner {
-  margin-top: 70px;
   align-items: flex-start;
   display: flex;
   flex-direction: column;
@@ -304,12 +303,14 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   z-index: 1;
+  align-items: center;
   margin-bottom: 40px;
 }
 
 form {
   display: inherit;
   width: 70%;
+  height: 90%;
   flex-direction: column;
   align-items: center;
   background-color: #ffffff;
@@ -325,12 +326,12 @@ form .input {
 form button {
   width: 100%;
   height: 40px;
-  margin-bottom: -50px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 form button:hover {
