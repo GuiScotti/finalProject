@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Core\Funnel;
 
 use Illuminate\Http\Request;
-use App\Models\Funnel;
 use Illuminate\Support\Facades\Auth;
 use Psy\CodeCleaner\ImplicitReturnPass;
 
@@ -11,10 +10,8 @@ use Psy\CodeCleaner\ImplicitReturnPass;
 class FunnelController extends Controller
 {
     public function index()
-    {
-        $funnel = Funnel::where('user_id', Auth::id())->paginate(10);
-        
-        return response()->json($funnel);
+    {   
+        return response()->json($FunnelRepository->getFunnel(Auth::id()));
     }
 
     public function store(Request $request)
